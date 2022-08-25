@@ -41,27 +41,15 @@ CREATE SEQUENCE seq_transfer_id
 
 CREATE TABLE transfer (
 	transfer_id int NOT NULL DEFAULT nextval('seq_transfer_id'),
-	transfer_type_code int,  
-	transfer_status_code int, 
-	account_from int, 
-	account_to int, 
-	transfer_amount decimal(13, 2), 
+	transfer_status_code int NOT NULL, 
+	account_from int NOT NULL, 
+	account_to int NOT NULL, 
+	transfer_amount decimal(13, 2) NOT NULL, 
 	CONSTRAINT PK_transfer PRIMARY KEY (transfer_id),
 	CONSTRAINT FK_transfer_account_from FOREIGN KEY (account_from) REFERENCES account (account_id),
 	CONSTRAINT FK_transfer_account_to FOREIGN KEY (account_to) REFERENCES account (account_id),
 	CONSTRAINT CK_transfer_account_different CHECK (account_from <> account_to),
 	CONSTRAINT CK_transfer_amount_valid CHECK (transfer_amount > 0)
 );
-
-INSERT INTO tenmo_user (username, user_id, password_hash)
-VALUES ('dummyone', 0001, 'password');
-INSERT INTO tenmo_user (username, user_id, password_hash)
-VALUES ('dummytwo', 0002, 'password');
-INSERT INTO account (account_id, user_id, balance)
-VALUES (0001, 0001, '999.00');
-INSERT INTO account (account_id, user_id, balance)
-VALUES (0002, 0002, '999.00');
-INSERT INTO transfer (transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount)
-VALUES (0001, 2, 3, 0001, 0002, '20.00');
 
 COMMIT;

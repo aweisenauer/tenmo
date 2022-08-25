@@ -32,15 +32,37 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public Transfer getTransferId(int transferId) {
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE transfer_id = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-        if(results.next()){
-            return mapRowToTransfer(results);
-        }
-        System.out.println("No transfer exists with the id : " + transferId);
+    public Transfer getTransferByTransferId(int transferId) {
         return null;
     }
+
+    @Override
+    public List<Transfer> getAllTransfersByUserId(int userId) {
+        List<Transfer> transfersByUserId = new ArrayList<>();
+        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE user_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        if(results.next()){
+            Transfer transferResult = mapRowToTransfer(results);
+            transfersByUserId.add(transferResult);
+            return transfersByUserId;
+        }
+        System.out.println("No transfer exists with the id : " + userId);
+        return null;
+    }
+
+//    @Override
+//    public List<Transfer> getAllTransferByUserId(int userId) {
+//        List<Transfer> transfersByUserId = new ArrayList<>();
+//        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE user_id = ?;";
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+//        if(results.next()){
+//            Transfer transferResult = mapRowToTransfer(results);
+//            transfersByUserId.add(transferResult);
+//            return transfersByUserId;
+//        }
+//        System.out.println("No transfer exists with the id : " + userId);
+//        return null;
+//    }
 
     @Override
     public List<Transfer> getAllTransfersByAccountId(int accountId) {

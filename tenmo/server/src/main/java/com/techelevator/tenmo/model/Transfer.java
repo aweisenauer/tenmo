@@ -2,7 +2,6 @@ package com.techelevator.tenmo.model;
 
 public class Transfer {
     private int transferId;
-    private int transferTypeId;
     private int transferStatusId; // 1 accepted 2 pending 3 denied? maybe
     private int accountFrom;
     private int accountTo;
@@ -15,14 +14,6 @@ public class Transfer {
 
     public void setTransferId(int transferId) {
         this.transferId = transferId;
-    }
-
-    public int getTransferTypeId() {
-        return transferTypeId;
-    }
-
-    public void setTransferTypeId(int transferTypeId) {
-        this.transferTypeId = transferTypeId;
     }
 
     public int getTransferStatusId() {

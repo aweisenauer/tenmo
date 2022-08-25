@@ -21,7 +21,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> getAllTransfers() {
         List<Transfer> allTransfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer;";
+        String sql = "SELECT transfer_id, transfer_status_code, account_from, account_to, transfer_amount FROM transfer;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while(results.next()){
             Transfer transferResult = mapRowToTransfer(results);
@@ -39,7 +39,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> getTransferHistoryFromId(int fromId) {
         List<Transfer> transfersByUserId = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from = ?;";
+        String sql = "SELECT transfer_id, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromId);
         if(results.next()){
             Transfer transferResult = mapRowToTransfer(results);
@@ -105,9 +105,9 @@ public class JdbcTransferDao implements TransferDao {
 
 
     public Transfer createTransfer(Transfer transfer) {
-        String sql = "INSERT INTO transfers (transfer_id, transfer_type_code, transfer_status_code, account_from, amount_to,transfer_amount)" //might need changed
-                +  " VALUES (?,?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, transfer.getTransferId(), transfer.getTransferTypeId(),transfer.getTransferStatusId(),
+        String sql = "INSERT INTO transfers (transfer_id, transfer_status_code, account_from, amount_to, transfer_amount)" //might need changed
+                +  " VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, transfer.getTransferId(),transfer.getTransferStatusId(),
                 transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
         return transfer;
     }
@@ -117,7 +117,6 @@ public class JdbcTransferDao implements TransferDao {
         jdbcTemplate.update(sql,transferStatusId,transferId);
     }
 
-
     private Transfer mapRowToTransfer(SqlRowSet results) {
         Transfer transfer = new Transfer();
         transfer.setAccountFrom(results.getInt("account_from"));
@@ -125,8 +124,6 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setAmount(results.getDouble("transfer_amount"));
         transfer.setTransferId(results.getInt("transfer_id"));
         transfer.setTransferStatusId(results.getInt("transfer_status_code"));
-        transfer.setTransferTypeId(results.getInt("transfer_type_code"));
         return transfer;
     }
-
 }

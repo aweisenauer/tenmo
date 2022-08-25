@@ -31,22 +31,22 @@ public class JdbcTransferDao implements TransferDao {
         return allTransfers;
     }
 
-    @Override
-    public Transfer getTransferByTransferId(int transferId) {
-        return null;
-    }
+//    @Override
+//    public Transfer getTransferByTransferId(int transferId) {
+//        return null;
+//    }
 
     @Override
-    public List<Transfer> getAllTransfersByUserId(int userId) {
+    public List<Transfer> getTransferHistoryFromId(int fromId) {
         List<Transfer> transfersByUserId = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE user_id = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromId);
         if(results.next()){
             Transfer transferResult = mapRowToTransfer(results);
             transfersByUserId.add(transferResult);
             return transfersByUserId;
         }
-        System.out.println("No transfer exists with the id : " + userId);
+        System.out.println("No transfer exists with the id : " + fromId);
         return null;
     }
 
@@ -64,44 +64,46 @@ public class JdbcTransferDao implements TransferDao {
 //        return null;
 //    }
 
-    @Override
-    public List<Transfer> getAllTransfersByAccountId(int accountId) {
-        List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from IN(?) OR account_to IN(?);";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountId,accountId);
-        while(results.next()){
-            Transfer transfer = mapRowToTransfer(results);
-            transfers.add(transfer);
-        }
+//    @Override
+//    public List<Transfer> getAllTransfersByAccountId(int accountId) {
+//        List<Transfer> transfers = new ArrayList<>();
+//        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from IN(?) OR account_to IN(?);";
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountId,accountId);
+//        while(results.next()){
+//            Transfer transfer = mapRowToTransfer(results);
+//            transfers.add(transfer);
+//        }
+//
+//        return transfers;
+//    }
 
-        return transfers;
-    }
+//    @Override
+//    public List<Transfer> getTransferByFromId(int accountId) {
+//        List<Transfer> transfers = new ArrayList<>();
+//        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from IN(?) OR account_to IN(?);";
+//
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId,accountId);
+//        while(results.next()) {
+//            Transfer transfer = mapRowToTransfer(results);
+//            transfers.add(transfer);
+//        }
+//        return transfers;
+//    }
 
-    @Override
-    public List<Transfer> getTransferByFromId(int accountId) {
-        List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from IN(?) OR account_to IN(?);";
+//    @Override
+//    public List<Transfer> getTransferHistoryByToId(int toId) {
+//        List<Transfer> transfers = new ArrayList<>();
+//        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_to = ?;";
+//
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,toId);
+//        while(results.next()) {
+//            Transfer transfer = mapRowToTransfer(results);
+//            transfers.add(transfer);
+//        }
+//        return transfers;
+//    }
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId,accountId);
-        while(results.next()) {
-            Transfer transfer = mapRowToTransfer(results);
-            transfers.add(transfer);
-        }
-        return transfers;
-    }
 
-    @Override
-    public List<Transfer> getTransfersByToId(int accountId) {
-        List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_code, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from IN(?) OR account_to IN(?);";
-
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountId,accountId);
-        while(results.next()) {
-            Transfer transfer = mapRowToTransfer(results);
-            transfers.add(transfer);
-        }
-        return transfers;
-    }
     public Transfer createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfers (transfer_id, transfer_type_code, transfer_status_code, account_from, amount_to,transfer_amount)" //might need changed
                 +  " VALUES (?,?, ?, ?, ?, ?)";

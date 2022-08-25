@@ -23,12 +23,22 @@ public class TransferController {
 
     }
 
-    @RequestMapping(path = "/transfers/{userId}", method = RequestMethod.GET)
-    public List<Transfer> getTransfersByUserId(@PathVariable int userId){
-        List<Transfer> transfersByUserId = transferDao.getAllTransfersByUserId(userId);
+    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    public List<Transfer> getAllTransfers() {
+        List<Transfer> allTransfers = transferDao.getAllTransfers();
+        return allTransfers;
+    }
+
+    @RequestMapping(path = "/transfers/{fromId}", method = RequestMethod.GET)
+    public List<Transfer> getTransferHistoryFromId(@PathVariable int fromId){
+        List<Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(fromId);
+        return transfersByUserId;
+    }
+
+    @RequestMapping(path = "/transfers/to/{toId}", method = RequestMethod.GET)
+    public List<Transfer> getTransferHistoryToId(@PathVariable int toId) {
+        List<com.techelevator.tenmo.model.Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(toId);
         return transfersByUserId;
 
     }
-
-
 }

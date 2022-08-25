@@ -29,12 +29,13 @@ return accountsList;
     }
 
     @Override
-    public Account findAccountInfoByAccountId(int accountId) {
+    public Account getAccountInfoByAccountId(int accountId) {
+        Account account = new Account();
         String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id =?;"; //returning account ID??
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountId);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
 if (results.next()){
-
-    return mapRowToAccount(results);
+account = mapRowToAccount(results);
+    return account;
 }
         System.out.println("No Account exists"); //EXCEPTION??
 return null;
@@ -42,26 +43,24 @@ return null;
     }
 
     @Override
-    public double getBalanceByAccountId(int accountId) {
+    public double getBalanceByAccountId(int id) {
         String sql = "SELECT balance FROM account WHERE account_id = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountId);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,id);
         if (results.next()){
         return results.getDouble("balance");}
         System.out.println("Account ID not found"); //EXCEPTION??
         return 0;
     }
 
-
-
-//find account by user id
 @Override
-public List<Account> getAccountByUserId(int userId){
+public List<Account> getAccountsByUserId(int userId){
         List<Account> accountList = new ArrayList<>();
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id =?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql,userId);
         while(results.next()){
             Account account = mapRowToAccount(results);
             accountList.add(account);
+            return accountList;
         }
     System.out.println("User ID not Found");
         return null;

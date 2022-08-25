@@ -15,7 +15,7 @@ public class UserController {
 
     private UserDao userDao;
 
-    public void userController(JdbcUserDao dao) {
+    public UserController(JdbcUserDao dao) {
         this.userDao = dao;
     }
     @RequestMapping(path = "/users", method = RequestMethod.GET)
@@ -27,10 +27,5 @@ public class UserController {
     public int getIdByUsername(@PathVariable String username){
         int userId = userDao.findIdByUsername(username);
         return userId;
-    }
-    @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
-    public String getUserByName(@PathVariable String username){
-        String username2 = String.valueOf(userDao.findByUsername(username));//TODO valueOf?
-        return username2;
     }
 }

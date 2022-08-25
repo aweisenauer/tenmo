@@ -1,11 +1,11 @@
 package com.techelevator.tenmo.controller;
 
-
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,10 +17,9 @@ public class AccountController {
     private AccountDao accountDao;
     private UserDao userDao;
 
-    public void accountController(JdbcAccountDao dao, JdbcUserDao userDao){
-        this.accountDao = dao;
+    public AccountController(JdbcAccountDao accountDao, JdbcUserDao userDao){
+        this.accountDao = accountDao;
         this.userDao = userDao;
-
     }
 
     @RequestMapping(path = "/accounts", method = RequestMethod.GET)
@@ -29,20 +28,20 @@ public class AccountController {
         return accountList;
     }
 
-    @RequestMapping(path="/accounts/{id}", method = RequestMethod.GET)
-    public Account getAccountInfoByAccountId(int accountId){
-        Account accountById = accountDao.findAccountInfoByAccountId(accountId);
+    @RequestMapping(path="/accounts/info/{accountId}", method = RequestMethod.GET)
+    public Account getAccountInfoByAccountId(@PathVariable int accountId){
+        Account accountById = accountDao.getAccountInfoByAccountId(accountId);
         return accountById;
 
     }
-    @RequestMapping(path = "????", method = RequestMethod.GET) //PATH
-    public List<Account> getAccountByUserId(int userId){
-        List<Account> accountList = accountDao.getAccountByUserId(userId);
-        return accountList;
+    @RequestMapping(path = "/accounts/{userId}", method = RequestMethod.GET)
+    public List<Account> getAccountsByUserId(@PathVariable int userId){
+        List<Account> accountByUserIdList = accountDao.getAccountsByUserId(userId);
+        return accountByUserIdList;
     }
-    @RequestMapping(path = "/accounts/balance",method = RequestMethod.GET)
-    public double getBalanceByAccountId(int accountId){
-        double accountBalance = accountDao.getBalanceByAccountId(accountId);
+    @RequestMapping(path = "/accounts/balance/{id}",method = RequestMethod.GET)
+    public double getBalanceByAccountId(@PathVariable int id){
+        double accountBalance = accountDao.getBalanceByAccountId(id);
         return accountBalance;
     }
 }

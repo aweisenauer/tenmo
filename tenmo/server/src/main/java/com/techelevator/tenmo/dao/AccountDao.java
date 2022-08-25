@@ -8,9 +8,9 @@ public interface AccountDao {
 
     List<Account> getAccounts();
 
-   Account findAccountInfoByAccountId(int accountId);
+   Account getAccountInfoByAccountId(int accountId);
 
-    List<Account> getAccountByUserId(int userId);
+    List<Account> getAccountsByUserId(int userId);
 
     double getBalanceByAccountId(int accountId);
 

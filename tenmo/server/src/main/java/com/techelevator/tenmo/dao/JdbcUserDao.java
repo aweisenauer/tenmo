@@ -15,6 +15,8 @@ import java.util.List;
 @Component
 public class JdbcUserDao implements UserDao {
 
+    private static final double STARTING_BALANCE = 1000;
+
     private JdbcTemplate jdbcTemplate;
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
@@ -67,8 +69,9 @@ public class JdbcUserDao implements UserDao {
             return false;
         }
 
-        // TODO: Create the account record with initial balance
-
+        // create account
+        String sql2 = "INSERT INTO account (user_id, balance) VALUES (?, ?)";
+        jdbcTemplate.update(sql2, newUserId, STARTING_BALANCE);
         return true;
     }
 

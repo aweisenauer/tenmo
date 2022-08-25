@@ -2,10 +2,7 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Transfer;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,10 +32,14 @@ public class TransferController {
         return transfersByUserId;
     }
 
-    @RequestMapping(path = "/transfers/to/{toId}", method = RequestMethod.GET)
-    public List<Transfer> getTransferHistoryToId(@PathVariable int toId) {
-        List<com.techelevator.tenmo.model.Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(toId);
-        return transfersByUserId;
+    @RequestMapping(path = "/transfers/info/{transferId}", method = RequestMethod.GET)
+    public Transfer getTransferDetailsByTransferId(@PathVariable int transferId){
+        return transferDao.getTransferByTransferId(transferId);
 
+    }
+
+    @RequestMapping(path = "/transfers", method = RequestMethod.POST)
+    public void createTransfer(@RequestBody Transfer transfer){
+        transferDao.createTransfer(transfer);
     }
 }

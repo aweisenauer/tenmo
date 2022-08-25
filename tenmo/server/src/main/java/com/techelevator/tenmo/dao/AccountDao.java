@@ -14,7 +14,7 @@ public interface AccountDao {
 
     double getBalanceByAccountId(int accountId);
 
-    //create account???
+  //update balance??
 
 
 

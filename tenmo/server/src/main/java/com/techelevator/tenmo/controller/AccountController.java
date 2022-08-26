@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
+
+
 @PreAuthorize("isAuthenticated()")
 @RestController
 public class AccountController {
@@ -25,13 +26,12 @@ public class AccountController {
 
     @RequestMapping(path = "/accounts", method = RequestMethod.GET)
     public List<Account> getAllAccounts(){
-        List<Account> accountList = accountDao.getAccounts();
-        return accountList;
+        return accountDao.getAccounts();
     }
 
-    @RequestMapping(path="/accounts/info/{accountId}", method = RequestMethod.GET)
-    public Account getAccountInfoByAccountId(@PathVariable int accountId){
-        Account accountById = accountDao.getAccountInfoByAccountId(accountId);
+    @RequestMapping(path="/accounts/info/{userId}", method = RequestMethod.GET)
+    public Account getAccountInfoByAccountId(@PathVariable int userId){
+        Account accountById = accountDao.getAccountInfoByAccountId(userId);
         return accountById;
 
     }
@@ -40,9 +40,8 @@ public class AccountController {
         List<Account> accountByUserIdList = accountDao.getAccountsByUserId(userId);
         return accountByUserIdList;
     }
-    @RequestMapping(path = "/accounts/balance/{id}",method = RequestMethod.GET)
-    public double getBalanceByAccountId(@PathVariable int id){
-        double accountBalance = accountDao.getBalanceByAccountId(id);
-        return accountBalance;
+    @RequestMapping(path = "/accounts/balance/{accountId}",method = RequestMethod.GET)
+    public Double getBalance(@PathVariable int accountId){
+        return accountDao.getBalance(accountId);
     }
 }

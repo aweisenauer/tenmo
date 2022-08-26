@@ -2,7 +2,7 @@ package com.techelevator.tenmo.model;
 
 public class Transfer {
     private int transferId;
-    private int transferStatusId; // 1 accepted 2 pending 3 denied? maybe
+    private int transferStatusId; // 0 accepted - 1 - pending - 2 rejected
     private int accountFrom;
     private int accountTo;
     private double amount;

@@ -42,23 +42,24 @@ return accountsList;
 
     @Override
     public Double getBalance(int accountId) {
-        String sql = "SELECT balance FROM account WHERE account_id = ?;";
+        String sql = "SELECT * FROM account WHERE account.account_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+        Account account = new Account();
         if (result.next()) {
-            return mapRowToAccount(result).getBalance();
+            account = mapRowToAccount(result);
+            return account.getBalance();
         }
         return null;
     }
 
 @Override
-public List<Account> getAccountsByUserId(int userId){
-        List<Account> accountList = new ArrayList<>();
+public Account getAccountByUserId(int userId){
+        Account account = new Account();
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id =?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while(results.next()){
-            Account account = mapRowToAccount(results);
-            accountList.add(account);
-            return accountList;
+            account = mapRowToAccount(results);
+            return account;
         }
     System.out.println("User ID not Found");
         return null;

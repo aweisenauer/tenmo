@@ -15,6 +15,7 @@ import java.util.List;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
+    Account account = new Account();
 JdbcAccountDao accountDao;
     private JdbcTemplate jdbcTemplate;
 
@@ -70,12 +71,7 @@ JdbcAccountDao accountDao;
         String sqlUpdateReceiver = "UPDATE account SET balance = balance + ?" + "WHERE account_id = ?";
         String sqlRejected = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
                 + " VALUES (2, ?, ?, ?)";
-        if (transfer.getAmount()>accountDao.getBalance(transfer.getAccountFrom())){
-            jdbcTemplate.update(sqlRejected,transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
-            return "CODE 2: Transfer Rejected, not enough funds to send.";
-        }
-
-       else try {
+        try {
             jdbcTemplate.update(sql,transfer.getTransferStatusId(),transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
         } catch (DataAccessException e) {
             System.out.println("error");

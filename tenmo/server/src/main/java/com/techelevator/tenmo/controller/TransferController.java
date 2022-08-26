@@ -6,6 +6,7 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 @PreAuthorize("isAuthenticated()")
 @RestController
@@ -22,13 +23,13 @@ public class TransferController {
 
     }
 
-    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    @RequestMapping(path = "/transfers", method = RequestMethod.GET) //all transfers by logged in user only
     public List<Transfer> getAllTransfers() {
         List<Transfer> allTransfers = transferDao.getAllTransfers();
         return allTransfers;
     }
 
-    @RequestMapping(path = "/transfers/{fromId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/transfers/{fromId}", method = RequestMethod.GET) //check this out -principal
     public List<Transfer> getTransferHistoryFromId(@PathVariable int fromId) {
         List<Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(fromId);
         return transfersByUserId;
@@ -41,7 +42,13 @@ public class TransferController {
     }
 
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
-    public void createTransfer(@RequestBody Transfer transfer) {
+    public void createTransfer(@RequestBody Transfer transfer, Principal principal) { //follow the crumbs
+        int userId = userDao.findIdByUsername(principal.getName());
+        int accountId = accountDao.getAccountByUserId(userId).getAccountId();
+if (transfer.getAmount()> accountDao.getBalance(accountId)){
+    System.out.println("CODE 2: Transaction Rejected - Insufficient Funds");
+
+} else
         transferDao.createTransfer(transfer);
     }
 }

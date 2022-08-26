@@ -10,7 +10,7 @@ public interface AccountDao {
 
     Account getAccountInfoByAccountId(int accountId);
 
-    List<Account> getAccountsByUserId(int userId);
+    Account getAccountByUserId(int userId);
 
     Double getBalance(int accountId);
 

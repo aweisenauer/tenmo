@@ -36,8 +36,8 @@ public class AccountController {
 
     }
     @RequestMapping(path = "/accounts/{userId}", method = RequestMethod.GET)
-    public List<Account> getAccountsByUserId(@PathVariable int userId){
-        List<Account> accountByUserIdList = accountDao.getAccountsByUserId(userId);
+    public Account getAccountByUserId(@PathVariable int userId){
+        Account accountByUserIdList = accountDao.getAccountByUserId(userId);
         return accountByUserIdList;
     }
     @RequestMapping(path = "/accounts/balance/{accountId}",method = RequestMethod.GET)

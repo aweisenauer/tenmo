@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,10 +65,25 @@ public class JdbcTransferDao implements TransferDao {
 
 
     public void createTransfer(Transfer transfer) {
-        String sql = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)" //might need changed
+        String sql = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
                 + " VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql,transfer.getTransferStatusId(),transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
-
+        String sqlUpdateSender = "UPDATE account SET balance = balance - ?" + "WHERE account_id = ?";
+        String sqlUpdateReceiver = "UPDATE account SET balance = balance + ?" + "WHERE account_id = ?";
+        try {
+            jdbcTemplate.update(sql,transfer.getTransferStatusId(),transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
+        } catch (DataAccessException e) {
+            System.out.println("error");
+        }
+        try {
+            jdbcTemplate.update(sqlUpdateSender, transfer.getAmount(), transfer.getAccountFrom());
+        } catch (DataAccessException e) {
+            System.out.println("error");
+        }
+        try {
+            jdbcTemplate.update(sqlUpdateReceiver, transfer.getAmount(), transfer.getAccountTo());
+        } catch (DataAccessException e) {
+            System.out.println("error");
+        }
     }
 
     public void updateTransferStatus(int accountId, int transferId, int transferStatusId) {

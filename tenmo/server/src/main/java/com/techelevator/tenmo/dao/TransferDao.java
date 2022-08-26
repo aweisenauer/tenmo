@@ -14,5 +14,5 @@ public interface TransferDao {
     //public List<Transfer> getTransferHistoryByToId(int toId);
 
     //public List<Transfer> getAllTransfersByAccountId(int accountId);
- public void createTransfer(Transfer transfer);
+    public void createTransfer(Transfer transfer);
 }

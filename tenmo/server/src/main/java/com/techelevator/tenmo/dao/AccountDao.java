@@ -8,14 +8,13 @@ public interface AccountDao {
 
     List<Account> getAccounts();
 
-   Account getAccountInfoByAccountId(int accountId);
+    Account getAccountInfoByAccountId(int accountId);
 
     List<Account> getAccountsByUserId(int userId);
 
     double getBalanceByAccountId(int accountId);
 
-  //update balance??
-
+    //update balance??
 
 
 }

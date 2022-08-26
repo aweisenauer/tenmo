@@ -39,7 +39,7 @@ public class JdbcTransferDao implements TransferDao {
     public Transfer getTransferByTransferId(int transferId) {
         String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
-        if (results.next()){
+        if (results.next()) {
             Transfer transferDetails = mapRowToTransfer(results);
             return transferDetails;
 
@@ -64,13 +64,8 @@ public class JdbcTransferDao implements TransferDao {
 
     public void createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)" //might need changed
-                + " VALUES (?, ?, ?, ?) RETURNING transfer_id";
-        Integer newTransferId;
-        try{
-            newTransferId = jdbcTemplate.queryForObject(sql,Integer.class, transfer);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-        }
+                + " VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql,transfer.getTransferStatusId(),transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
 
     }
 

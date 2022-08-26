@@ -13,7 +13,7 @@ public class TransferController {
     private TransferDao transferDao;
 
 
-    public TransferController(JdbcTransferDao transferDao, JdbcUserDao userDao, JdbcAccountDao accountDao){
+    public TransferController(JdbcTransferDao transferDao, JdbcUserDao userDao, JdbcAccountDao accountDao) {
         this.accountDao = accountDao;
         this.transferDao = transferDao;
         this.userDao = userDao;
@@ -27,19 +27,19 @@ public class TransferController {
     }
 
     @RequestMapping(path = "/transfers/{fromId}", method = RequestMethod.GET)
-    public List<Transfer> getTransferHistoryFromId(@PathVariable int fromId){
+    public List<Transfer> getTransferHistoryFromId(@PathVariable int fromId) {
         List<Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(fromId);
         return transfersByUserId;
     }
 
     @RequestMapping(path = "/transfers/info/{transferId}", method = RequestMethod.GET)
-    public Transfer getTransferDetailsByTransferId(@PathVariable int transferId){
+    public Transfer getTransferDetailsByTransferId(@PathVariable int transferId) {
         return transferDao.getTransferByTransferId(transferId);
 
     }
 
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
-    public void createTransfer(@RequestBody Transfer transfer){
+    public void createTransfer(@RequestBody Transfer transfer) {
         transferDao.createTransfer(transfer);
     }
 }

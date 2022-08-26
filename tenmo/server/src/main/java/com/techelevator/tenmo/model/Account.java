@@ -38,5 +38,10 @@ public class Account {
         this.balance = balance;
     }
 
+    public double getAccountBalanceById(int accountId){
+        this.accountId = accountId;
+        this.balance = balance;
+        return balance;
+    }
     // to string??
 }

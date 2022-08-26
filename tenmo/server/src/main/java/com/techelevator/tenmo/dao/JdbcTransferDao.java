@@ -15,8 +15,7 @@ import java.util.List;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
-
-
+JdbcAccountDao accountDao;
     private JdbcTemplate jdbcTemplate;
 
     public JdbcTransferDao(DataSource dataSource) {
@@ -64,18 +63,27 @@ public class JdbcTransferDao implements TransferDao {
     }
 
 
-    public void createTransfer(Transfer transfer) {
+    public String createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
                 + " VALUES (?, ?, ?, ?)";
         String sqlUpdateSender = "UPDATE account SET balance = balance - ?" + "WHERE account_id = ?";
         String sqlUpdateReceiver = "UPDATE account SET balance = balance + ?" + "WHERE account_id = ?";
-        try {
+        String sqlRejected = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
+                + " VALUES (2, ?, ?, ?)";
+        if (transfer.getAmount()>accountDao.getBalanceByAccountId(transfer.getAccountFrom())){
+            jdbcTemplate.update(sqlRejected,transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
+            return "CODE 2: Transfer Rejected, not enough funds to send.";
+        }
+
+       else try {
             jdbcTemplate.update(sql,transfer.getTransferStatusId(),transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
         } catch (DataAccessException e) {
             System.out.println("error");
         }
         try {
-            jdbcTemplate.update(sqlUpdateSender, transfer.getAmount(), transfer.getAccountFrom());
+                jdbcTemplate.update(sqlUpdateSender, transfer.getAmount(), transfer.getAccountFrom());
+
+
         } catch (DataAccessException e) {
             System.out.println("error");
         }
@@ -84,6 +92,7 @@ public class JdbcTransferDao implements TransferDao {
         } catch (DataAccessException e) {
             System.out.println("error");
         }
+        return "Transaction Successful!";
     }
 
     public void updateTransferStatus(int accountId, int transferId, int transferStatusId) {

@@ -44,11 +44,13 @@ public class TransferController {
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
     public void createTransfer(@RequestBody Transfer transfer, Principal principal) { //follow the crumbs
         int userId = userDao.findIdByUsername(principal.getName());
-        int accountId = accountDao.getAccountByUserId(userId).getAccountId();
-if (transfer.getAmount()> accountDao.getBalance(accountId)){
+
+if (transfer.getAmount() > accountDao.getBalance(userId)){
     System.out.println("CODE 2: Transaction Rejected - Insufficient Funds");
 
 } else
         transferDao.createTransfer(transfer);
+        System.out.println("Transfer successfully created.");
+        System.out.println(principal.getName() + " sends " + transfer.getAmount() + " to receiver");
     }
 }

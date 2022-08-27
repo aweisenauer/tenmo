@@ -52,14 +52,14 @@ JdbcAccountDao accountDao;
     @Override
     public List<Transfer> getTransferHistoryFromId(int fromId) {
         List<Transfer> transfersByUserId = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromId);
+        String sql = "SELECT * FROM transfer WHERE account_from = ? OR account_to=?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromId, fromId);
         if (results.next()) {
             Transfer transferResult = mapRowToTransfer(results);
             transfersByUserId.add(transferResult);
             return transfersByUserId;
         }
-        System.out.println("No transfer exists with the id : " + fromId);
+        System.out.println("No transfer exists from current logged in user");
         return null;
     }
 

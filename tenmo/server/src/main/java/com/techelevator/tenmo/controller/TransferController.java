@@ -29,9 +29,11 @@ public class TransferController {
         return allTransfers;
     }
 
-    @RequestMapping(path = "/transfers/{fromId}", method = RequestMethod.GET) //check this out -principal
-    public List<Transfer> getTransferHistoryFromId(@PathVariable int fromId) {
-        List<Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(fromId);
+    @RequestMapping(path = "/transfers/", method = RequestMethod.GET) //check this out -principal
+    public List<Transfer> getTransferHistoryFromId(Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.findIdByUsername(username);
+        List<Transfer> transfersByUserId = transferDao.getTransferHistoryFromId(userId);
         return transfersByUserId;
     }
 
@@ -42,10 +44,10 @@ public class TransferController {
     }
 
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
-    public void createTransfer(@RequestBody Transfer transfer, Principal principal) { //follow the crumbs
+    public void createTransfer(@RequestBody Transfer transfer, Principal principal) {
         int userId = userDao.findIdByUsername(principal.getName());
         int accountId = accountDao.getAccountByUserId(userId).getAccountId();
-if (transfer.getAmount()> accountDao.getBalance(accountId)){
+if (transfer.getAmount()> accountDao.getBalance(userId)){
     System.out.println("CODE 2: Transaction Rejected - Insufficient Funds");
 
 } else

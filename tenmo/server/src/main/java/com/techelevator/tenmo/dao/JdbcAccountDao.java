@@ -42,11 +42,7 @@ return accountsList;
 
     @Override
     public Double getBalance(int accountId) {
-<<<<<<< HEAD
-        String sql = "SELECT * FROM account WHERE account_id = ?;";
-=======
         String sql = "SELECT * FROM account WHERE account.account_id = ?;";
->>>>>>> 78b1565f6beacfeee599ad4c933608a63e4a693d
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
         Account account = new Account();
         if (result.next()) {

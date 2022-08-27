@@ -12,6 +12,5 @@ public interface AccountDao {
 
     Account getAccountByUserId(int userId);
 
-    Double getBalance(int accountId);
-
+    Double getBalance(int userId);
 }

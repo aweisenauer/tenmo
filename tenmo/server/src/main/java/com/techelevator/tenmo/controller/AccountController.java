@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 import java.util.List;
 
 
@@ -40,8 +42,10 @@ public class AccountController {
         Account accountByUserIdList = accountDao.getAccountByUserId(userId);
         return accountByUserIdList;
     }
-    @RequestMapping(path = "/accounts/balance/{accountId}",method = RequestMethod.GET)
-    public Double getBalance(@PathVariable int accountId){
-        return accountDao.getBalance(accountId);
+    @RequestMapping(path = "/accounts/balance/",method = RequestMethod.GET)
+    public Double getBalance(Principal principal){
+        String username = principal.getName();
+        int userId = userDao.findIdByUsername(username);
+        return accountDao.getBalance(userId);
     }
 }

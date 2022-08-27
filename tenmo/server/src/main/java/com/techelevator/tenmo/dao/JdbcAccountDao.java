@@ -41,9 +41,9 @@ return accountsList;
     }
 
     @Override
-    public Double getBalance(int accountId) {
-        String sql = "SELECT * FROM account WHERE account.account_id = ?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+    public Double getBalance(int userId) {
+        String sql = "SELECT * FROM account WHERE account.user_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         Account account = new Account();
         if (result.next()) {
             account = mapRowToAccount(result);

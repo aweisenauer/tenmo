@@ -12,5 +12,5 @@ public interface TransferDao {
 
     public List<Transfer> getTransferHistoryFromId(int fromId);
 
-    public String createTransfer(Transfer transfer);
+    public boolean createTransfer(Transfer transfer);
 }

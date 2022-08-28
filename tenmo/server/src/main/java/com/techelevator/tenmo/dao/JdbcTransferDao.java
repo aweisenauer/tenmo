@@ -63,7 +63,7 @@ JdbcAccountDao accountDao;
     }
 
 
-    public String createTransfer(Transfer transfer) {
+    public boolean createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
                 + " VALUES (?, ?, ?, ?)";
         String sqlUpdateSender = "UPDATE account SET balance = balance - ?" + "WHERE account_id = ?";
@@ -72,7 +72,10 @@ JdbcAccountDao accountDao;
                 + " VALUES (2, ?, ?, ?)";
         if (transfer.getAmount()>accountDao.getBalanceByAccountId(transfer.getAccountFrom())){
             jdbcTemplate.update(sqlRejected,transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
-            return "CODE 2: Transfer Rejected, not enough funds to send.";
+            System.out.println("CODE 2: Transfer Rejected, not enough funds to send.");
+            return false;
+
+
         }
 
        else try {
@@ -92,7 +95,8 @@ JdbcAccountDao accountDao;
         } catch (DataAccessException e) {
             System.out.println("error");
         }
-        return "Transaction Successful!";
+        System.out.println("Transaction Successful!");
+        return true;
     }
 
     public void updateTransferStatus(int accountId, int transferId, int transferStatusId) {

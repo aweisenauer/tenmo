@@ -31,6 +31,18 @@ public class JdbcAccountDaoTests extends BaseDaoTests{
     public void get_account_by_account_id(){
       Account account = sut.getAccountInfoByAccountId(2001);
       Assert.assertEquals(TEST_ACCOUNT_1.getAccountId(),account.getAccountId());
+    }
+
+    @Test
+    public void get_account_balance_by_account_id(){
+        double accountBalance = sut.getBalanceByAccountId(2001);
+        Assert.assertEquals(TEST_ACCOUNT_1.getBalance(),accountBalance,0.1);
+
+    }
+    @Test
+    public void get_account_by_user_is(){
+        List<Account> accountList = sut.getAccountsByUserId(1001);
+        Assert.assertEquals(1,accountList.size());
 
     }
 

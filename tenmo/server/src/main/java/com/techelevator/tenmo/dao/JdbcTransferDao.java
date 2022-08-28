@@ -15,7 +15,6 @@ import java.util.List;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
-    Account account = new Account();
 JdbcAccountDao accountDao;
     private JdbcTemplate jdbcTemplate;
 
@@ -25,14 +24,10 @@ JdbcAccountDao accountDao;
 
 
     @Override
-    public List<Transfer> getAllTransfersByUsername(String username) {
+    public List<Transfer> getAllTransfers() {
         List<Transfer> allTransfers = new ArrayList<>();
-        String sql = "SELECT t.transfer_id,t.transfer_status_code,t.account_from,t.account_to,t.transfer_amount \n" +
-                "FROM transfer t \n" +
-                "JOIN account s ON t.account_from = s.account_id OR t.account_to = s.account_id\n" +
-                "JOIN tenmo_user tu ON tu.user_id = s.user_id\n" +
-                "WHERE tu.username = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, username);
+        String sql = "SELECT transfer_id, transfer_status_code, account_from, account_to, transfer_amount FROM transfer;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while (results.next()) {
             Transfer transferResult = mapRowToTransfer(results);
             allTransfers.add(transferResult);
@@ -43,7 +38,7 @@ JdbcAccountDao accountDao;
 
     @Override
     public Transfer getTransferByTransferId(int transferId) {
-        String sql = "SELECT * FROM transfer WHERE transfer_id = ?"; //fix sql
+        String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
         if (results.next()) {
             Transfer transferDetails = mapRowToTransfer(results);
@@ -54,19 +49,18 @@ JdbcAccountDao accountDao;
     }
 
     @Override
-    public List<Transfer> getTransferHistoryFromId(int accountId) {
+    public List<Transfer> getTransferHistoryFromId(int fromId) {
         List<Transfer> transfersByUserId = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,accountId);
-        while (results.next()); {
+        String sql = "SELECT transfer_id, transfer_status_code, account_from, account_to, transfer_amount FROM transfer WHERE account_from = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromId);
+        if (results.next()) {
             Transfer transferResult = mapRowToTransfer(results);
             transfersByUserId.add(transferResult);
-            }
-
-
-        return transfersByUserId;
+            return transfersByUserId;
         }
-
+        System.out.println("No transfer exists with the id : " + fromId);
+        return null;
+    }
 
 
     public String createTransfer(Transfer transfer) {
@@ -76,7 +70,12 @@ JdbcAccountDao accountDao;
         String sqlUpdateReceiver = "UPDATE account SET balance = balance + ?" + "WHERE account_id = ?";
         String sqlRejected = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
                 + " VALUES (2, ?, ?, ?)";
-        try {
+        if (transfer.getAmount()>accountDao.getBalanceByAccountId(transfer.getAccountFrom())){
+            jdbcTemplate.update(sqlRejected,transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
+            return "CODE 2: Transfer Rejected, not enough funds to send.";
+        }
+
+       else try {
             jdbcTemplate.update(sql,transfer.getTransferStatusId(),transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
         } catch (DataAccessException e) {
             System.out.println("error");
@@ -96,29 +95,10 @@ JdbcAccountDao accountDao;
         return "Transaction Successful!";
     }
 
-    public void requestTransfer(Transfer transfer){
-        String sqlPending = "INSERT INTO transfer (transfer_status_code, account_from, account_to, transfer_amount)"
-                + " VALUES (3, ?, ?, ?)";
-        try {
-            jdbcTemplate.update(sqlPending,transfer.getAccountFrom(),transfer.getAccountTo(),transfer.getAmount());
-            System.out.println("Transaction Created: Request is Pending");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public void updateTransferStatus(int accountId, int transferId, int transferStatusId) {
+        String sql = "UPDATE transfer SET transfer_status_code = ? WHERE transfer_id = ?;";   //might need changed
+        jdbcTemplate.update(sql, transferStatusId, transferId);
     }
-
-
-//    public void updateTransferStatus(int accountId, int transferId, int transferStatusId) {
-//        String sql = "UPDATE transfer SET transfer_status_code = ? WHERE transfer_id = ?;";//might need changed
-//        try {
-//            jdbcTemplate.update(sql, transferStatusId, transferId);
-//            if (transferStatusId==1){
-//
-//            }
-//        }
-//
-//    }
 
     private Transfer mapRowToTransfer(SqlRowSet results) {
         Transfer transfer = new Transfer();

@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -31,40 +32,40 @@ return accountsList;
         Account account = new Account();
         String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id =?;"; //returning account ID??
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
-    if (results.next()){
-        account = mapRowToAccount(results);
-        return account;
-    }
+if (results.next()){
+account = mapRowToAccount(results);
+    return account;
+}
         System.out.println("No Account exists"); //EXCEPTION??
-        return null;
+return null;
 
     }
 
     @Override
-    public Double getBalance(int userId) {
-        String sql = "SELECT * FROM account WHERE account.user_id = ?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
-        Account account = new Account();
-        if (result.next()) {
-            account = mapRowToAccount(result);
-            return account.getBalance();
-        }
-        return null;
+    public double getBalanceByAccountId(int id) {
+        String sql = "SELECT balance FROM account WHERE account_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,id);
+        if (results.next()){
+        return results.getDouble("balance");}
+        System.out.println("Account ID not found"); //EXCEPTION??
+        return 0;
     }
 
 @Override
-public Account getAccountByUserId(int userId){
-        Account account = new Account();
+public List<Account> getAccountsByUserId(int userId){
+        List<Account> accountList = new ArrayList<>();
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id =?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,userId);
         while(results.next()){
-            account = mapRowToAccount(results);
-            return account;
+            Account account = mapRowToAccount(results);
+            accountList.add(account);
+            return accountList;
         }
     System.out.println("User ID not Found");
         return null;
 
 }
+
 
     private Account mapRowToAccount(SqlRowSet rowSet){
         Account account = new Account();

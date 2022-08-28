@@ -12,8 +12,7 @@ public class Account {
         this.balance = balance;
     }
 
-    public Account() {
-    }
+    public Account(){}
 
     public int getAccountId() {
         return accountId;
@@ -39,6 +38,12 @@ public class Account {
         this.balance = balance;
     }
 
+    public double getAccountBalanceById(int accountId){
+        this.accountId = accountId;
+        this.balance = balance;
+        return balance;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -46,8 +51,5 @@ public class Account {
                 ", userId=" + userId +
                 ", balance=" + balance +
                 '}';
-
     }
 }
-
-

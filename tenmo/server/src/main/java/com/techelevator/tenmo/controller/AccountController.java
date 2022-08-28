@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
-
-
 @PreAuthorize("isAuthenticated()")
 @RestController
 public class AccountController {
@@ -28,24 +25,24 @@ public class AccountController {
 
     @RequestMapping(path = "/accounts", method = RequestMethod.GET)
     public List<Account> getAllAccounts(){
-        return accountDao.getAccounts();
+        List<Account> accountList = accountDao.getAccounts();
+        return accountList;
     }
 
-    @RequestMapping(path="/accounts/info/{userId}", method = RequestMethod.GET)
-    public Account getAccountInfoByAccountId(@PathVariable int userId){
-        Account accountById = accountDao.getAccountInfoByAccountId(userId);
+    @RequestMapping(path="/accounts/info/{accountId}", method = RequestMethod.GET)
+    public Account getAccountInfoByAccountId(@PathVariable int accountId){
+        Account accountById = accountDao.getAccountInfoByAccountId(accountId);
         return accountById;
 
     }
     @RequestMapping(path = "/accounts/{userId}", method = RequestMethod.GET)
-    public Account getAccountByUserId(@PathVariable int userId){
-        Account accountByUserIdList = accountDao.getAccountByUserId(userId);
+    public List<Account> getAccountsByUserId(@PathVariable int userId){
+        List<Account> accountByUserIdList = accountDao.getAccountsByUserId(userId);
         return accountByUserIdList;
     }
-    @RequestMapping(path = "/accounts/balance/",method = RequestMethod.GET)
-    public Double getBalance(Principal principal){
-        String username = principal.getName();
-        int userId = userDao.findIdByUsername(username);
-        return accountDao.getBalance(userId);
+    @RequestMapping(path = "/accounts/balance/{id}",method = RequestMethod.GET)
+    public double getBalanceByAccountId(@PathVariable int id){
+        double accountBalance = accountDao.getBalanceByAccountId(id);
+        return accountBalance;
     }
 }

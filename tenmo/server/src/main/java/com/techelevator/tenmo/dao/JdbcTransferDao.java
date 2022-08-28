@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -15,11 +16,12 @@ import java.util.List;
 
 @Component
 public class JdbcTransferDao implements TransferDao {
-JdbcAccountDao accountDao;
+    AccountDao accountDao;
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcTransferDao(DataSource dataSource) {
+    public JdbcTransferDao(DataSource dataSource, AccountDao accountDao) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.accountDao   = accountDao;
     }
 
 

@@ -12,6 +12,7 @@ import java.util.List;
 public class JdbcAccountDaoTests extends BaseDaoTests{
     private JdbcAccountDao sut;
 
+
     protected static final Account TEST_ACCOUNT_1 = new Account(2001, 1001, 1000);
     protected static final Account TEST_ACCOUNT_2 = new Account(2002, 1002, 20);
 

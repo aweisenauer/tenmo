@@ -12,7 +12,6 @@ import java.util.List;
 public class JdbcAccountDaoTests extends BaseDaoTests{
     private JdbcAccountDao sut;
 
-
     protected static final Account TEST_ACCOUNT_1 = new Account(2001, 1001, 1000);
     protected static final Account TEST_ACCOUNT_2 = new Account(2002, 1002, 20);
 
@@ -32,6 +31,18 @@ public class JdbcAccountDaoTests extends BaseDaoTests{
     public void get_account_by_account_id(){
       Account account = sut.getAccountInfoByAccountId(2001);
       Assert.assertEquals(TEST_ACCOUNT_1.getAccountId(),account.getAccountId());
+    }
+
+    @Test
+    public void get_account_balance_by_account_id(){
+        double accountBalance = sut.getBalanceByAccountId(2001);
+        Assert.assertEquals(TEST_ACCOUNT_1.getBalance(),accountBalance,0.1);
+
+    }
+    @Test
+    public void get_account_by_user_is(){
+        List<Account> accountList = sut.getAccountsByUserId(1001);
+        Assert.assertEquals(1,accountList.size());
 
     }
 

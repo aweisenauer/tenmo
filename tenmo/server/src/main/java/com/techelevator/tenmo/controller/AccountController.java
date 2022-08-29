@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 @PreAuthorize("isAuthenticated()")
 @RestController
@@ -36,13 +37,15 @@ public class AccountController {
 
     }
     @RequestMapping(path = "/accounts/{userId}", method = RequestMethod.GET)
-    public List<Account> getAccountsByUserId(@PathVariable int userId){
-        List<Account> accountByUserIdList = accountDao.getAccountsByUserId(userId);
+    public Account getAccountsByUserId(@PathVariable int userId){
+        Account accountByUserIdList = accountDao.getAccountsByUserId(userId);
         return accountByUserIdList;
     }
-    @RequestMapping(path = "/accounts/balance/{id}",method = RequestMethod.GET)
-    public double getBalanceByAccountId(@PathVariable int id){
-        double accountBalance = accountDao.getBalanceByAccountId(id);
+    @RequestMapping(path = "/accounts/balance/",method = RequestMethod.GET)
+    public double getBalanceByAccountId(Principal principal){
+        int userId = userDao.findIdByUsername(principal.getName());
+        int accountId = accountDao.getAccountsByUserId(userId).getAccountId();
+        double accountBalance = accountDao.getBalanceByAccountId(accountId);
         return accountBalance;
     }
 }

@@ -18,10 +18,10 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     public List<Account> getAccounts(){
         List<Account> accountsList = new ArrayList<>();
-        String sql = "SELECT account_id, user_id, balance FROM account;";
+        String sql = "SELECT account_id, user_id FROM account;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while(results.next()){
-            Account account = mapRowToAccount(results);
+            Account account = mapRowToAccountNoBalance(results);
             accountsList.add(account);
         }
 return accountsList;
@@ -52,14 +52,13 @@ return null;
     }
 
 @Override
-public List<Account> getAccountsByUserId(int userId){
-        List<Account> accountList = new ArrayList<>();
+public Account getAccountsByUserId(int userId){
+        Account account = new Account();
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id =?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql,userId);
         while(results.next()){
-            Account account = mapRowToAccount(results);
-            accountList.add(account);
-            return accountList;
+            account = mapRowToAccount(results);
+            return account;
         }
     System.out.println("User ID not Found");
         return null;
@@ -76,4 +75,11 @@ public List<Account> getAccountsByUserId(int userId){
 
     }
 
+    private Account mapRowToAccountNoBalance(SqlRowSet rowSet){
+        Account account = new Account();
+        account.setAccountId(rowSet.getInt("account_id"));
+        account.setUserId(rowSet.getInt("user_id"));
+        return account;
+
+    }
 }

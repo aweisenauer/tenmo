@@ -1,5 +1,6 @@
 package com.techelevator.dao;
 
+import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
 import com.techelevator.tenmo.model.Transfer;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class JdbcTransferDaoTests extends BaseDaoTests {
     private JdbcTransferDao sut;
-
+private AccountDao accountDao;
     private static final Transfer TEST_Transfer_1 = new Transfer(3001, 1, 2002, 2001, 20.00);
     private static final Transfer TEST_Transfer_2 = new Transfer(3002, 1, 2001, 2002, 20.00);
     private static final Transfer TEST_Transfer_3 = new Transfer(3003, 1, 2001, 2002, 20.00);
@@ -21,7 +22,9 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
     @Before
     public void setup() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcTransferDao(dataSource);
+        accountDao = new JdbcAccountDao(jdbcTemplate);
+        sut = new JdbcTransferDao(dataSource,accountDao);
+
 
     }
 

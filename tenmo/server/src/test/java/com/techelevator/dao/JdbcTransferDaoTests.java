@@ -40,11 +40,9 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
 
     @Test
     public void create_transfer(){
-        boolean transferCreated = sut.createTransfer(TEST_Transfer_2);
+        boolean transferCreated = sut.createTransfer(TEST_Transfer_3);
         Assert.assertTrue(transferCreated);
-        Transfer transfer = sut.getTransferByTransferId(TEST_Transfer_2.getTransferId());
-        Assert.assertEquals(3002,transfer.getTransferId());
-
-
+        Transfer transfer = sut.getTransferByTransferId(TEST_Transfer_3.getTransferId());
+        Assert.assertEquals(3003,transfer.getTransferId());
     }
 }
